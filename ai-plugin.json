@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Zander API",
+  "name_for_model": "zander_api",
+  "description_for_human": "Chat, generate images, and manage memory with Zander.",
+  "description_for_model": "Use this API to interact with Zander via chat, generate images, and manage memory or sessions.",
+  "auth": {
+    "type": "user_http",
+    "authorization_type": "bearer"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://zander.ai/api/openapi.json"
+  },
+  "contact_email": "support@zander.ai",
+  "legal_info_url": "https://zander.ai/privacy"
+}

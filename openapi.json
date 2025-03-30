@@ -1,0 +1,288 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Zander API",
+    "description": "Interact with Zander for chat, image generation, memory, sessions, and more.",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://zander.ai/api"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "getHealthStatus",
+        "summary": "Health check",
+        "description": "Check if the API is up and running.",
+        "responses": {
+          "200": {
+            "description": "API is healthy"
+          }
+        }
+      }
+    },
+    "/privacy": {
+      "get": {
+        "operationId": "getPrivacyPolicy",
+        "summary": "Privacy policy",
+        "description": "Returns the HTML version of Zander's privacy policy.",
+        "responses": {
+          "200": {
+            "description": "HTML policy",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat": {
+      "post": {
+        "operationId": "postChatMessage",
+        "summary": "Chat with Zander",
+        "description": "Send a message and get a response from Zander.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "What's up, Zander?"
+                  }
+                },
+                "required": [
+                  "message"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Zander's response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reply": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/image": {
+      "post": {
+        "operationId": "generateImage",
+        "summary": "Generate image",
+        "description": "Generate an image from a text prompt.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": {
+                    "type": "string",
+                    "example": "A neon city at night with flying cars"
+                  }
+                },
+                "required": [
+                  "prompt"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Image generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "imageUrl": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload": {
+      "post": {
+        "operationId": "uploadFile",
+        "summary": "Upload file",
+        "description": "Upload a file for processing (e.g. for analysis or context).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fileId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/session": {
+      "post": {
+        "operationId": "startSession",
+        "summary": "Start a new user session",
+        "description": "Initiates a new session for tracking conversation and memory.",
+        "responses": {
+          "200": {
+            "description": "Session started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "endSession",
+        "summary": "End current session",
+        "description": "Terminates the active session and clears any temporary context.",
+        "responses": {
+          "200": {
+            "description": "Session ended"
+          }
+        }
+      }
+    },
+    "/memory": {
+      "post": {
+        "operationId": "storeMemory",
+        "summary": "Store user memory",
+        "description": "Save persistent memory (like preferences, facts, notes).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "key",
+                  "value"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Memory stored"
+          }
+        }
+      },
+      "get": {
+        "operationId": "getMemory",
+        "summary": "Get user memory",
+        "description": "Retrieve stored memory values for this session/user.",
+        "responses": {
+          "200": {
+            "description": "Memory retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "clearMemory",
+        "summary": "Clear memory",
+        "description": "Deletes all stored memory for this user or session.",
+        "responses": {
+          "200": {
+            "description": "Memory cleared"
+          }
+        }
+      }
+    }
+  }
+}
